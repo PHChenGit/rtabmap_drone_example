@@ -92,6 +92,11 @@ docker run -it --rm \
 
 ```bash
 roslaunch rtabmap_drone_example gazebo.launch
+
+roslaunch rtabmap_drone_example gazebo.launch world_name:=no_texture
+roslaunch rtabmap_drone_example gazebo.launch world_name:=warehouse_3
+
+
 roslaunch rtabmap_drone_example slam.launch
 roslaunch rtabmap_drone_example rviz.launch
 

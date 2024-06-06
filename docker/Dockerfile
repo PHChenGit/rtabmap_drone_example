@@ -3,6 +3,8 @@
 
 FROM ros:noetic-perception
 
+ARG ROS_VERSION=noetic
+
 RUN apt update && apt install \
     ros-noetic-gazebo-dev \
     ros-noetic-joy \
@@ -16,6 +18,8 @@ RUN apt update && apt install \
     ros-noetic-move-base \
     ros-noetic-xacro \
     ros-noetic-robot-state-publisher \
+    ros-noetic-rqt \
+    ros-noetic-rqt-common-plugins \
     libgeographic-dev \
     geographiclib-tools \
     libgstreamer1.0-dev \
@@ -29,14 +33,10 @@ RUN rm /bin/sh && ln -s /bin/bash /bin/sh
 
 WORKDIR /root/
 
-RUN git clone https://github.com/PX4/PX4-Autopilot.git &&\
+RUN git clone --depth 1 --branch v1.12.3 https://github.com/PX4/PX4-Autopilot.git  --recursive && \
     cd PX4-Autopilot && \
-    git checkout v1.12.3 && \
-    git submodule update --init --recursive && \
-    make -j8 px4_sitl_default gazebo && \
-    make px4_sitl_default install && \
-    cd && \
-    rm -rf PX4-Autopilot
+    make -j$(nproc) px4_sitl_default gazebo && \
+    make px4_sitl_default install
 
 # To work with PX4/Firmware 1.12.3, mavros 1.8.0 or 1.9.0 releases should be used
 # (With mavros master branch there are a lot of "Detected jump back in time" TF errors)
